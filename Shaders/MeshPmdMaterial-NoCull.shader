@@ -15,7 +15,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-Shader "MMD/PMDMaterial-with-Outline"
+Shader "MMD/PMDMaterial-NoCull"
 {
 	Properties
 	{
@@ -23,8 +23,6 @@ Shader "MMD/PMDMaterial-with-Outline"
 		_SpecularColor("反射色", Color) = (1,1,1)
 		_AmbColor("環境色", Color) = (1,1,1)
 		_Shininess("反射強度", Float) = 0
-		_OutlineColor("エッジ色", Color) = (0,0,0,1)
-		_OutlineWidth("エッジ幅", Range(0,1)) = 0.2
 		_MainTex("テクスチャ", 2D) = "white" {}
 		_ToonTex("トゥーン", 2D) = "white" {}
 		_SphereAddTex("スフィア（加算）", 2D) = "black" {}
@@ -33,25 +31,13 @@ Shader "MMD/PMDMaterial-with-Outline"
 
 	SubShader
 	{
+		Cull Off
+
 		// Surface Shader
 		CGPROGRAM
 		#pragma surface surf MMD
 		#include "MeshPmdMaterialSurface.cginc"
 		ENDCG
-		
-		// Outline Pass
-		Pass
-		{
-			Cull Front
-			Lighting Off
-			
-			CGPROGRAM
-			#pragma vertex vert 
-			#pragma fragment frag
-			#include "UnityCG.cginc"
-			#include "MeshPmdMaterialVertFrag.cginc"
-			ENDCG
-		}
 	}
 
 	// Other Environment

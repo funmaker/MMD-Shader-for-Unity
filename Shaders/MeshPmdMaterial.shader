@@ -31,12 +31,6 @@ Shader "MMD/PMDMaterial"
 
 	SubShader
 	{
-		// First Pass
-		Pass
-		{
-			Cull Off
-		}
-
 		// Surface Shader
 		CGPROGRAM
 		#pragma surface surf MMD

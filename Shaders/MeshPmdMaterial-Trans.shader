@@ -38,27 +38,24 @@ Shader "MMD/Transparent/PMDMaterial"
 			"Queue" = "Transparent"
 			"RenderType" = "Transparent"
 		}
-		
-		// Surface Shader
-		Cull Back
-		ZWrite On
-		Blend SrcAlpha OneMinusSrcAlpha
-		CGPROGRAM
-		#pragma surface surf MMD
-		#include "MeshPmdMaterialSurface.cginc"
-		ENDCG
+
+    // Draw opaque parts in ZBuffer
+		Pass
+		{
+			ZWrite On
+			ColorMask 0
+			AlphaTest Greater 0.9
+			SetTexture [_MainTex] { combine texture }
+		}
 
 		// Surface Shader
-		Cull Front
-		ZWrite Off
 		Blend SrcAlpha OneMinusSrcAlpha
 		CGPROGRAM
-		#pragma surface surf MMD
+		#pragma surface surf MMD alpha
 		#include "MeshPmdMaterialSurface.cginc"
 		ENDCG
-
 	}
 
 	// Other Environment
-	Fallback "Transparent/Diffuse"
+	Fallback "Diffuse"
 }

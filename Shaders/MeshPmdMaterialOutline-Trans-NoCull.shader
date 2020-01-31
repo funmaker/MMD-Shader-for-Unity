@@ -15,11 +15,12 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-Shader "MMD/PMDMaterial-with-Outline"
+Shader "MMD/Transparent/PMDMaterial-with-Outline-NoCull"
 {
 	Properties
 	{
 		_Color("拡散色", Color) = (1,1,1,1)
+		_Opacity("不透明度", Float) = 1.0
 		_SpecularColor("反射色", Color) = (1,1,1)
 		_AmbColor("環境色", Color) = (1,1,1)
 		_Shininess("反射強度", Float) = 0
@@ -33,20 +34,44 @@ Shader "MMD/PMDMaterial-with-Outline"
 
 	SubShader
 	{
-		// Surface Shader
+		// Settings
+		Tags
+		{
+			"Queue" = "Transparent"
+			"RenderType" = "Transparent"
+		}
+
+    // Draw opaque parts in ZBuffer
+		Pass
+		{
+			ZWrite On
+			ColorMask 0
+			AlphaTest Greater 0.9
+			SetTexture [_MainTex] { combine texture }
+		}
+
+		// Surface Shader Pass
+		Cull Off
+		Blend SrcAlpha OneMinusSrcAlpha
 		CGPROGRAM
-		#pragma surface surf MMD
+		#pragma surface surf MMD alpha
 		#include "MeshPmdMaterialSurface.cginc"
 		ENDCG
-		
+
+    // Remove outline from inside of mesh
+		Pass
+		{
+			ZWrite On
+			ColorMask 0
+		}
+
 		// Outline Pass
 		Pass
 		{
 			Cull Front
 			Lighting Off
-			
 			CGPROGRAM
-			#pragma vertex vert 
+			#pragma vertex vert
 			#pragma fragment frag
 			#include "UnityCG.cginc"
 			#include "MeshPmdMaterialVertFrag.cginc"

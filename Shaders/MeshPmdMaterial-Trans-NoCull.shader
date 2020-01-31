@@ -15,16 +15,15 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-Shader "MMD/PMDMaterial-with-Outline"
+Shader "MMD/Transparent/PMDMaterial-NoCull"
 {
 	Properties
 	{
 		_Color("拡散色", Color) = (1,1,1,1)
+		_Opacity("不透明度", Float) = 1.0
 		_SpecularColor("反射色", Color) = (1,1,1)
 		_AmbColor("環境色", Color) = (1,1,1)
 		_Shininess("反射強度", Float) = 0
-		_OutlineColor("エッジ色", Color) = (0,0,0,1)
-		_OutlineWidth("エッジ幅", Range(0,1)) = 0.2
 		_MainTex("テクスチャ", 2D) = "white" {}
 		_ToonTex("トゥーン", 2D) = "white" {}
 		_SphereAddTex("スフィア（加算）", 2D) = "black" {}
@@ -33,25 +32,29 @@ Shader "MMD/PMDMaterial-with-Outline"
 
 	SubShader
 	{
-		// Surface Shader
-		CGPROGRAM
-		#pragma surface surf MMD
-		#include "MeshPmdMaterialSurface.cginc"
-		ENDCG
-		
-		// Outline Pass
+		// Settings
+		Tags
+		{
+			"Queue" = "Transparent"
+			"RenderType" = "Transparent"
+		}
+
+    // Draw opaque parts in ZBuffer
 		Pass
 		{
-			Cull Front
-			Lighting Off
-			
-			CGPROGRAM
-			#pragma vertex vert 
-			#pragma fragment frag
-			#include "UnityCG.cginc"
-			#include "MeshPmdMaterialVertFrag.cginc"
-			ENDCG
+			ZWrite On
+			ColorMask 0
+			AlphaTest Greater 0.9
+			SetTexture [_MainTex] { combine texture }
 		}
+
+		// Surface Shader
+		Cull Off
+		Blend SrcAlpha OneMinusSrcAlpha
+		CGPROGRAM
+		#pragma surface surf MMD alpha
+		#include "MeshPmdMaterialSurface.cginc"
+		ENDCG
 	}
 
 	// Other Environment

@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 /*
  * MMD Shader for Unity
  *
@@ -19,6 +21,7 @@ float4 _Color;
 float _Opacity;
 float4 _OutlineColor;
 float _OutlineWidth;
+sampler2D _MainTex;
 
 struct v2f
 {
@@ -29,14 +32,16 @@ struct v2f
 v2f vert( appdata_base v )
 {
 	v2f o;
-	float4 pos = mul( UNITY_MATRIX_MVP, v.vertex );
+	float4 pos = UnityObjectToClipPos( v.vertex );
 	float width = 0.01 * _OutlineWidth;
 	float4 edge_pos = v.vertex + pos.w * width * float4( v.normal, 0.0 );
-	o.pos = mul( UNITY_MATRIX_MVP, edge_pos );
+	o.pos = UnityObjectToClipPos( edge_pos );
+	o.uv = v.texcoord.xy;
 
 	return o;
 }
 half4 frag( v2f i ) : COLOR
 {
-	return half4( _OutlineColor.rgb, _Opacity );
+	float4 tex_color = tex2D( _MainTex, i.uv );
+	return half4( _OutlineColor.rgb, _Opacity * _OutlineColor.a * tex_color.a );
 }

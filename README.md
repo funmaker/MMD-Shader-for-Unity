@@ -1,6 +1,15 @@
 MMD Shader for Unity
 ========
 
+### Fork Info ###
+
+I've fixed some issues I had with these shaders and added NoCulling and
+NoShadow variants for each material. You can use
+[MMDMaterialExtractor](https://github.com/funmaker/MMDMaterialExtractor)
+to automatically generate Unity materials from model.
+
+*\~ Fun Maker*
+
 ### Preview ###
 
 <img src="http://3dcgarts.github.com/MMD-Shader-for-Unity/images/material_preview.png">
@@ -10,6 +19,7 @@ Presented by [3DCGArts](http://www.3dcg-arts.net/)
 ### Download ###
 
 [Version 1.2](https://github.com/3dcgarts/MMD-Shader-for-Unity/zipball/v1.2)
+(outdated, download .unitypackage directly from master)
 
 ### 使い方 ###
 

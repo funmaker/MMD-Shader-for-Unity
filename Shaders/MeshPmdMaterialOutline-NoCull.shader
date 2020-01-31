@@ -15,7 +15,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-Shader "MMD/PMDMaterial-with-Outline"
+Shader "MMD/PMDMaterial-with-Outline-NoCull"
 {
 	Properties
 	{
@@ -34,6 +34,7 @@ Shader "MMD/PMDMaterial-with-Outline"
 	SubShader
 	{
 		// Surface Shader
+		Cull Off
 		CGPROGRAM
 		#pragma surface surf MMD
 		#include "MeshPmdMaterialSurface.cginc"
